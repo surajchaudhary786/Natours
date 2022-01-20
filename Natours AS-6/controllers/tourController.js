@@ -52,20 +52,31 @@ exports.createTour = async (req, res) => {
     }
   });
 } catch(err){
-  res.status(400).json({
+  res.status(404).json({
     status:'fail',
     message:err
   })
 }
 };
 
-exports.updateTour = (req, res) => {
+exports.updateTour =async (req, res) => {
+  try {
+  const tour= await Tour.findByIdAndUpdate(req.params.id,req.body,{            //findbyid and update is mongoose function which will find and update both
+    new:true,                                                                  //works only under PATCH request
+    runValidators:true
+  })  
   res.status(200).json({
     status: 'success',
     data: {
-      tour: '<Updated tour here...>'
+      tour
     }
   });
+} catch(err){
+  res.status(404).json({
+    status:'fail',
+    message:err
+  });
+}
 };
 
 exports.deleteTour = (req, res) => {
